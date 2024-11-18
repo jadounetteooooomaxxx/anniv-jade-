@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roue des Thèmes</title>
+    <script src="https://cdn.jsdelivr.net/npm/winwheel.js@2.8.0/dist/Winwheel.min.js"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; margin-top: 50px; }
+        #myCanvas { border: 2px solid #000; }
+        #result { margin-top: 20px; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+    <h1>Tournez la Roue et obtenez votre Thème !</h1>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+    <button onclick="spinWheel()">Tourner la Roue</button>
+    <div id="result"></div>
+
+    <script>
+        // Liste des thèmes - MODIFIEZ cette liste selon vos besoins
+        const themes = [
+            "Thème 1", "Thème 2", "Thème 3", "Thème 4", 
+            "Thème 5", "Thème 6", "Thème 7", "Thème 8"
+        ];
+
+        // Créer la roue
+        let theWheel = new Winwheel({
+            'numSegments': themes.length,
+            'segments': themes.map(theme => ({ 'fillStyle': '#ffcc00', 'text': theme })),
+            'pointerAngle': 90,
+            'animation': {
+                'type': 'spinToStop',
+                'duration': 4,
+                'spins': 8
+            },
+            'lineWidth': 4,
+            'strokeStyle': 'black'
+        });
+
+        // Fonction pour faire tourner la roue
+        function spinWheel() {
+            // Démarrer la roue
+            theWheel.startAnimation();
+        }
+
+        // Fonction de gestion de la fin du spin
+        theWheel.animation.callback = function () {
+            const selectedTheme = theWheel.getIndicatedSegment().text;
+            // Afficher le résultat à l'utilisateur
+            document.getElementById("result").innerText = "Vous avez obtenu : " + selectedTheme;
+
+            // Enregistrer le résultat (ici on utilise LocalStorage, vous pouvez aussi envoyer ça à un backend)
+            localStorage.setItem('userTheme', selectedTheme);
+
+            // Pour visualiser le résultat en tant qu'administrateur
+            console.log("Résultat attribué : " + selectedTheme); // Vous, en tant qu'administrateur, voyez ici les résultats
+        };
+    </script>
+</body>
+</html>
